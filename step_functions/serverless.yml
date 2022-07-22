@@ -30,7 +30,7 @@ functions:
     role: arn:aws:iam::781667190002:role/${self:provider.stage}SeempleLambdaRole
     events:
       - sns:
-        arn: arn:aws:sns:us-east-2:123456789012:DeliveryRequest
+        arn: arn:aws:sns:us-west-2:781667190002:DeliveryRequest
   driverAlex:
     name: ${self:service}-AlexLambda
     handler: alex.lambda_handler
@@ -38,7 +38,7 @@ functions:
     role: arn:aws:iam::781667190002:role/${self:provider.stage}SeempleLambdaRole
     events:
       - sns: 
-        arn: arn:aws:sns:us-east-2:123456789012:DeliveryRequest
+        arn: arn:aws:sns:us-west-2:781667190002:DeliveryRequest
 
 stepFunctions:
   stateMachines:
@@ -57,13 +57,13 @@ stepFunctions:
             Next: request_driver
           request_driver:
             Type: Task
-            Resource: "arn:aws:states:::sns:publish.waitForTaskToken"
+            Resource: arn:aws:states:::sns:publish.waitForTaskToken
             TimeoutSeconds: 15
             Parameters: 
               Message:
                 TaskToken.$: "$$.Task.Token"
                 Input.$: "$.OrderNumber"
-              TopicArn: "arn:aws:sns:us-east-2:123456789012:DeliveryRequest"
+              TopicArn: arn:aws:sns:us-west-2:781667190002:DeliveryRequest
             Catch:
               - ErrorEquals: ["States.Timeout" ]
                 Next: notify_customer_of_delay
