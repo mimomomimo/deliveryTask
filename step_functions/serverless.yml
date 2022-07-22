@@ -31,14 +31,16 @@ functions:
     timeout: 60
     role: arn:aws:iam::781667190002:role/${self:provider.stage}SeempleLambdaRole
     events:
-      - sns: arn:aws:sns:us-east-2:123456789012:DeliveryRequest
+      - sns:
+        arn: arn:aws:sns:us-east-2:123456789012:DeliveryRequest
   driverAlex:
     name: ${self:service}-AlexLambda
     handler: alex.lambda_handler
     timeout: 60
     role: arn:aws:iam::781667190002:role/${self:provider.stage}SeempleLambdaRole
     events:
-      - sns: arn:aws:sns:us-east-2:123456789012:DeliveryRequest
+      - sns: 
+        arn: arn:aws:sns:us-east-2:123456789012:DeliveryRequest
 
 stepFunctions:
   stateMachines:
