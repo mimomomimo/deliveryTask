@@ -10,15 +10,7 @@ phases:
 
   pre_build:
     commands:
-      - apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
-      - apt-get -y update
-      - pip install --upgrade awscli
       - workdir=/tmp/delivery_req
-      - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile zappa_deployer
-      - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile zappa_deployer
-      - aws configure list
-      - aws --region ${AWS_REGION} --profile zappa_deployer ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
-
   build:
     commands:
       - source_root_dir=`pwd`
