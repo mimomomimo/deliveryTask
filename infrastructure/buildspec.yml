@@ -25,7 +25,7 @@ phases:
     commands:
       - source_root_dir=`pwd`
       - cp -R ./step_functions workdir
-      - ls
+      - cd step_functions
       # deploy serverless
       - npm config set save-exact true
       - npm install
