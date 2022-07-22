@@ -29,7 +29,7 @@ phases:
       - npm config set save-exact true
       - npm install
       - npm install -g serverless
-      - npm list --depth=0 | grep step-functions
+      - npm list --depth=0
       - sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
       - sls deploy
       - python3 -m pip install -r requirements.txt
