@@ -12,17 +12,17 @@ logger = getLogger(__name__)
 sfn = boto3.client('stepfunctions')
 
 DRIVER_NAME = "Alex"
-MAX_WAIT = 30 #Wait calculated in 100s of milliseconds
+MAX_WAIT = 10 #Wait calculated in 100s of milliseconds
 MIN_WAIT = 0 #Wait calculated in 100s of milliseconds
-REJECT_THRESHOLD = 15
+REJECT_THRESHOLD = 4
 
-def sleep(ms):
-    time.sleep(ms)
+def sleep(s):
+    time.sleep(s)
 
 def lambda_handler(event, context):
     token = event.get("token")
     randomWait = random.randint(MIN_WAIT, MAX_WAIT)
-    logger.info("Random Wait Generated (ms) : " + str(randomWait));  
+    logger.info("Random Wait Generated (s) : " + str(randomWait));  
     
     #Driver is not available to accept delivery
     if randomWait <= REJECT_THRESHOLD:
@@ -30,7 +30,7 @@ def lambda_handler(event, context):
     
     # Simulate random response time of driver
     sleep(randomWait)
-    logger.info('Sleeping for: ' + str(randomWait) + ' ms')
+    logger.info('Sleeping for: ' + str(randomWait) + ' s')
 
     # Return token to step functions
 
