@@ -1,0 +1,30 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+
+  pre_build:
+    commands:
+      - apt-key adv --refresh-keys --keyserver keyserver.ubuntu.com
+      - apt-get -y update
+      - pip install --upgrade awscli
+      - workdir=/tmp/delivery_req
+      - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID --profile zappa_deployer
+      - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile zappa_deployer
+      - aws configure list
+      - aws --region ${AWS_REGION} --profile zappa_deployer ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+  build:
+    commands:
+      - source_root_dir=`pwd`
+      - cp -R ./step_functions workdir
+      # deploy serverless
+      - npm config set save-exact true
+      - npm install
+      - npm install -g serverless
+      - npm list --depth=0 | grep step-functions
+      - sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
+      - sls deploy
+      - python3 -m pip install -r requirements.txt

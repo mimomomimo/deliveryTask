@@ -1,0 +1,107 @@
+service: DriverRequest
+
+plugins:
+  - serverless-step-functions
+
+provider:
+  name: aws
+  role: StepFunctionRole
+  runtime: python3.8
+  region: ap-northeast-1
+  stage: ${opt:stage, 'Staging'}
+  deploymentBucket:
+    name: seemple-serverless-deploy-tokyo
+
+# warn when serverless.yml is config error
+configValidationMode: warn
+
+package:
+  exclude:
+    - node_modules/**
+
+custom:
+  AWS_DEFAULT_REGION: us-west-2
+  TZ: UTC
+
+functions:
+  driverSally:
+    name: ${self:service}-SallyLambd
+    handler: sally.lambda_handler
+    timeout: 60
+    role: arn:aws:iam::781667190002:role/${self:provider.stage}SeempleLambdaRole
+    events:
+      - sns: arn:aws:sns:us-east-2:123456789012:DeliveryRequest
+  driverAlex:
+    name: ${self:service}-AlexLambda
+    handler: alex.lambda_handler
+    timeout: 60
+    role: arn:aws:iam::781667190002:role/${self:provider.stage}SeempleLambdaRole
+    events:
+      - sns: arn:aws:sns:us-east-2:123456789012:DeliveryRequest
+
+stepFunctions:
+  stateMachines:
+    StateMachine1:
+      name: ${self:service}
+      definition:
+        StartAt: check_inventory
+        States:
+          check_inventory:
+            Type: Pass
+            OutputPath: "$"
+            Next: place_cc_hold
+          place_cc_hold:         
+            Type: Pass
+            OutputPath: "$"
+            Next: request_driver
+          request_driver:
+            Type: Task
+            Resource: "arn:aws:states:::sns:publish.waitForTaskToken"
+            TimeoutSeconds: 15,
+            Parameters: 
+              Message:
+                TaskToken.$: "$$.Task.Token"
+                Input.$: "$.OrderNumber"
+              TopicArn: "arn:aws:sns:us-east-2:123456789012:DeliveryRequest"
+            Catch:
+              - ErrorEquals: ["States.Timeout" ]
+                  Next: notify_customer_of_delay
+            Next: delivery_assigned_to_driver
+          delivery_assigned_to_driver:
+            Type: Pass
+            OutputPath: $
+            End: true
+          notify_customer_of_delay
+            Type: Pass
+            OutputPath: $
+            End: true
+
+resources:
+  Resources:
+    StepFunctionRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:service}StepFunctionsRole
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaRole
+          - arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+                  - events.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: ${self:service}StepFunctionsPolicy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - lambda:*
+                    - sns:Publish
+                  Resource:
+                    - "*"
