@@ -2,6 +2,7 @@ service: DriverRequest
 
 plugins:
   - serverless-step-functions
+  - serverless-pseudo-parameters
 
 provider:
   name: aws
