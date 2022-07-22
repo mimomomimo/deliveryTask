@@ -60,7 +60,7 @@ stepFunctions:
           request_driver:
             Type: Task
             Resource: "arn:aws:states:::sns:publish.waitForTaskToken"
-            TimeoutSeconds: 15,
+            TimeoutSeconds: 15
             Parameters: 
               Message:
                 TaskToken.$: "$$.Task.Token"
