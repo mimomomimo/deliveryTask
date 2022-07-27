@@ -36,7 +36,10 @@ functions:
     timeout: 60
     role: arn:aws:iam::781667190002:role/${self:provider.stage}SeempleLambdaRole
     events:
-      - sns: arn:aws:sns:us-west-2:781667190002:DeliveryRequest
+      - arn:
+        Fn::GetAtt:
+          - DeliveryRequest
+          - Arn
 
 stepFunctions:
   stateMachines:
@@ -104,3 +107,10 @@ resources:
                     - sns:Publish
                   Resource:
                     - "*"
+    DeliveryRequest:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: DeliveryRequest
+        Subscription:
+          - Endpoint: ${opt:mail}
+            Protocol: email
