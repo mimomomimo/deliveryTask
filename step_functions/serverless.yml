@@ -83,7 +83,7 @@ resources:
     LambdaRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: ${self:provider.stage}-SophiaAIDWHGetAPITokenLambda
+      RoleName: DeliveryRequestLambdaRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess
@@ -97,7 +97,7 @@ resources:
             Action: sts:AssumeRole
       Description: Allows Lambda functions to call AWS services on your behalf.
       Policies:
-        - PolicyName: ${self:provider.stage}-SophiaAIDWHGetAPITokenLambdaPolicy
+        - PolicyName: DeliveryRequestLambdaPolicy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
