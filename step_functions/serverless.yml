@@ -115,6 +115,6 @@ resources:
     SNSSubscription:
       Type: AWS::SNS::Subscription
       Properties:
-          Endpoint: ${opt:mail}
+          Endpoint: tugoyuze@usako.net
           Protocol: email
           TopicArn: !Ref DeliveryRequest

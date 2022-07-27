@@ -34,5 +34,5 @@ phases:
       - npm install -g serverless
       - npm list --depth=0 |grep serverless
       - sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
-      - sls deploy --mail $MAIL
+      - sls deploy
       - python3 -m pip install -r requirements.txt
