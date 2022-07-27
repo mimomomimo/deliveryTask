@@ -27,14 +27,14 @@ functions:
     name: ${self:service}-SallyLambda
     handler: sally.lambda_handler
     timeout: 60
-    role: arn:aws:iam::781667190002:role/${self:provider.stage}SeempleLambdaRole
+    role: LambdaRole
     events:
       - sns: arn:aws:sns:us-west-2:781667190002:DeliveryRequest
   driverAlex:
     name: ${self:service}-AlexLambdaa
     handler: alex.lambda_handler
     timeout: 60
-    role: arn:aws:iam::781667190002:role/${self:provider.stage}SeempleLambdaRole
+    role: LambdaRole
     events:
       - arn:
         Fn::GetAtt:
@@ -80,6 +80,33 @@ stepFunctions:
 
 resources:
   Resources:
+     LambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: ${self:provider.stage}-SophiaAIDWHGetAPITokenLambda
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+          - arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Description: Allows Lambda functions to call AWS services on your behalf.
+        Policies:
+          - PolicyName: ${self:provider.stage}-SophiaAIDWHGetAPITokenLambdaPolicy
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action: 
+                    - sqs:*
+                    - ssm:*
+                  Resource:
+                    - "*"
     StepFunctionRole:
       Type: AWS::IAM::Role
       Properties:
