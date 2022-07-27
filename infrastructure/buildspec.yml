@@ -20,7 +20,8 @@ phases:
       - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY --profile zappa_deployer
       - aws configure list
       - aws --region ${AWS_REGION} --profile zappa_deployer ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com
-
+      - npm install -g aws-cdk
+      - cdk --version
 
   build:
     commands:

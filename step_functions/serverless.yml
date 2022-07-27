@@ -110,7 +110,11 @@ resources:
     DeliveryRequest:
       Type: AWS::SNS::Topic
       Properties:
+        DisplayName: DeliveryRequest
         TopicName: DeliveryRequest
-        Subscription:
-          - Endpoint: ${opt:mail}
-            Protocol: email
+    SNSSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+          Endpoint: ${opt:mail}
+          Protocol: email
+          TopicArn: !Ref DeliveryRequest
