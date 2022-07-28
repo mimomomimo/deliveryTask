@@ -29,7 +29,10 @@ functions:
     timeout: 60
     role: LambdaRole
     events:
-      - sns: arn:aws:sns:us-west-2:781667190002:DeliveryRequest
+      - arn:
+          Fn::GetAtt:
+            - DeliveryRequest
+            - Arn
   driverAlex:
     name: ${self:service}-AlexLambdaa
     handler: alex.lambda_handler
@@ -134,14 +137,14 @@ resources:
                     - sns:Publish
                   Resource:
                     - "*"
-    DeliveryRequest:
+    DeliveryRequestTopic:
       Type: AWS::SNS::Topic
       Properties:
-        DisplayName: DeliveryRequest
-        TopicName: DeliveryRequest
+        DisplayName: DeliveryRequestTopic
+        TopicName: DeliveryRequestTopic
     SNSSubscription:
       Type: AWS::SNS::Subscription
       Properties:
-          Endpoint: tugoyuze@usako.net
-          Protocol: email
-          TopicArn: !Ref DeliveryRequest
+        Endpoint: tugoyuze@usako.net
+        Protocol: email
+        TopicArn: !Ref DeliveryRequestTopic
