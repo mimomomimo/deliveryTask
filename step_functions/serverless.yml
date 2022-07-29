@@ -28,14 +28,14 @@ functions:
     timeout: 100
     role: LambdaRole
     events:
-      - sns: arn:aws:sns:us-west-2:781667190002:DeliveryRequestTopic
+      - sns: arn:aws:sns:us-west-2:${AWS::AccountId}:DeliveryRequestTopic
   driverAlex:
-    name: ${self:service}-AlexLambdaa
+    name: ${self:service}-AlexLambda
     handler: alex.handler
     timeout: 100
     role: LambdaRole
     events:
-      - sns: arn:aws:sns:us-west-2:781667190002:DeliveryRequestTopic
+      - sns: arn:aws:sns:us-west-2:${AWS::AccountId}:DeliveryRequestTopic
 
 stepFunctions:
   stateMachines:
@@ -60,7 +60,7 @@ stepFunctions:
               Message:
                 TaskToken.$: "$$.Task.Token"
                 Input.$: "$.OrderNumber"
-              TopicArn: arn:aws:sns:us-west-2:781667190002:DeliveryRequestTopic
+              TopicArn: arn:aws:sns:us-west-2:${AWS::AccountId}:DeliveryRequestTopic
             Catch:
               - ErrorEquals: ["States.Timeout" ]
                 Next: notify_customer_of_delay
