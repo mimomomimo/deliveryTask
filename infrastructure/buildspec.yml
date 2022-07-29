@@ -6,7 +6,6 @@ env:
 phases:
   install:
     runtime-versions:
-      python: 3.8
       nodejs: 14
 
   pre_build:
@@ -35,4 +34,3 @@ phases:
       - npm list --depth=0 |grep serverless
       - sls config credentials --provider aws --key $AWS_ACCESS_KEY_ID --secret $AWS_SECRET_ACCESS_KEY
       - sls deploy
-      - python3 -m pip install -r requirements.txt
