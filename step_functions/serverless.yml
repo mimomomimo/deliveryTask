@@ -29,14 +29,14 @@ functions:
     timeout: 60
     role: LambdaRole
     events:
-      - arn: { Fn::GetAtt: [DeliveryRequestTopic, Arn] }
+      - sns: arn:aws:sns:us-west-2:781667190002:DeliveryRequestTopic
   driverAlex:
     name: ${self:service}-AlexLambdaa
     handler: alex.lambda_handler
     timeout: 60
     role: LambdaRole
     events:
-      - arn: { Fn::GetAtt: [DeliveryRequestTopic, Arn] }
+      - sns: arn:aws:sns:us-west-2:781667190002:DeliveryRequestTopic
 
 stepFunctions:
   stateMachines:
