@@ -25,15 +25,15 @@ custom:
 functions:
   driverSally:
     name: ${self:service}-SallyLambda
-    handler: lambda.sally.handler
-    timeout: 60
+    handler: sally.handler
+    timeout: 100
     role: LambdaRole
     events:
       - sns: arn:aws:sns:us-west-2:781667190002:DeliveryRequestTopic
   driverAlex:
     name: ${self:service}-AlexLambdaa
-    handler: lambda.alex.handler
-    timeout: 60
+    handler: alex.handler
+    timeout: 100
     role: LambdaRole
     events:
       - sns: arn:aws:sns:us-west-2:781667190002:DeliveryRequestTopic
