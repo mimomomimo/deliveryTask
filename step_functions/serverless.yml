@@ -61,7 +61,7 @@ stepFunctions:
               Message:
                 TaskToken.$: "$$.Task.Token"
                 Input.$: "$.OrderNumber"
-              TopicArn: arn:aws:sns:us-west-2:781667190002:DeliveryRequest
+              TopicArn: arn:aws:sns:us-west-2:781667190002:DeliveryRequestTopic
             Catch:
               - ErrorEquals: ["States.Timeout" ]
                 Next: notify_customer_of_delay
